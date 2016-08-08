@@ -1,0 +1,3 @@
+[submodule "Rtabmap-Odomerty-tracker"]
+	path = Rtabmap-Odomerty-tracker
+	url = https://github.com/TIR4N4Z0R05/Rtabmap-Odomerty-tracker.git
