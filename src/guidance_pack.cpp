@@ -15,11 +15,9 @@ Technology.
 #include <../include/guidance_pack.h>
 #include <../include/pid.h>
 #include <ros/ros.h>
-#include <marvel_v_0_1/OpticalFlow.h>
-#include <marvel_v_0_1/Autopilot.h>
-#include <marvel_v_0_1/Guidance_Command.h>
-#include <marvel_v_0_1/window_detector.h>
-#include <marvel_v_0_1/obstacle_avoidance.h>
+#include <Marvel/Autopilot.h>
+#include <Marvel/Guidance_Command.h>
+
 
 // Guidance variables
 
@@ -67,7 +65,7 @@ unsigned short int current_function_no = 0;
 
 bool initialize_flight_plan() {
     std::string line;
-    std::ifstream file ("/home/odroid/workspace/marvel_v_0_1/var/flight_plan.txt");
+    std::ifstream file ("/home/ubuntu/workspace/Marvel/var/flight_plan.txt");
     
     // Reading blocks and functions from the file
     
@@ -136,41 +134,14 @@ bool initialize_flight_plan() {
 
 }
 
-// Optical flow callback function
-
-void optical_flow_Callback(const marvel_v_0_1::OpticalFlow::ConstPtr& msg) {
-	
-	v_x = msg->velocity_x;
-	v_y = msg->velocity_y;
-	height = msg->ground_distance;
-	quality = msg->quality;
-}
-
 // Server receive callback function
 
-void server_receive_Callback(const marvel_v_0_1::Autopilot::ConstPtr& msg) {
+void server_receive_Callback(const Marvel::Autopilot::ConstPtr& msg) {
 	heading = msg->heading;
 	rate = msg->rate;
 	v_z = msg->climb;
 	armed = msg->armed;
 	server_ready = msg->ready;
-}
-
-// Window position data receive callback function
-
-void window_postion_receive_Callback(const marvel_v_0_1::window_detector::ConstPtr& msg) {
-	window_deltax = msg->deltax;
-	window_deltay = msg->deltay;
-	window_pitch = msg->pith;
-}
-
-// Obstacle Avoidance data receive callback function
-
-void obstacle_avoidance_receive_Callback(const marvel_v_0_1::obstacle_avoidance::ConstPtr& msg) {
-	obstacle_vx_setpoint = msg->vx;
-	obstacle_vy_setpoint = msg->vy;
-	obstacle_vz_setpoint = msg->vz;
-	obstacle_psi_setpoint = msg->psidot;
 }
 
 // Main program start
@@ -182,24 +153,18 @@ int main(int argc, char **argv) {
    
     ros::init(argc, argv, "guidance_pack");
     ros::NodeHandle n;
-    ros::Subscriber sub = n.subscribe("optical_flow", 1000, optical_flow_Callback);
     ros::Subscriber sub2 = n.subscribe("server", 1000, server_receive_Callback);
-	ros::Subscriber sub3 = n.subscribe("window_postion", 1000, window_postion_receive_Callback);
-	ros::Subscriber sub4 = n.subscribe("obstacle_data", 1000, obstacle_avoidance_receive_Callback);
-    ros::Publisher pub = n.advertise<marvel_v_0_1::Guidance_Command>("guidance_pack", 1000);
-    marvel_v_0_1::Guidance_Command guidance_msg;
+	ros::Publisher pub = n.advertise<Marvel::Guidance_Command>("guidance_pack", 1000);
+    Marvel::Guidance_Command guidance_msg;
     
-	// Running the initial packages
-	
-	system("rosrun marvel_v_0_1 optical_flow &> /dev/null &");
-	system("rosrun marvel_v_0_1 server &> /dev/null &");
-	
 	// wait for the server to be ready
 	
 	while(!server_ready) {
 		ros::spinOnce();
 	}
 	
+	std::cout<<"Server ready...!"<<std::endl;
+
     // Flight plan initialization
     
 	if(!(initialize_flight_plan())) {
@@ -226,8 +191,6 @@ int main(int argc, char **argv) {
         
         if(f[current_function_no].done == true){
 			current_function_no ++;
-			system("rosservice call /qr_kill 1 1 ");
-			system("rosservice call /window_kill 1 1");
 		} 
 
         switch(f[current_function_no].type) {
@@ -303,9 +266,9 @@ int main(int argc, char **argv) {
 			switch (g_lock_param){
 			 
 			case WINDOW_DETECTOR:
-				system("roslaunch openni2_launch openni2.launch &> /dev/null &");
-				system("rosrun marvel_v_0_1 window_detector &> /dev/null &");
-				system("rosrun marvel_v_0_1 obstacle_avoidance &> /dev/null &");
+				//system("roslaunch openni2_launch openni2.launch &> /dev/null &");
+				//system("rosrun Marvel window_detector &> /dev/null &");
+				//system("rosrun Marvel obstacle_avoidance &> /dev/null &");
 				guidance_msg.vx_uni = 1.4;
 				guidance_msg.vy_uni = window_deltax * 0.0004 ;
 				guidance_msg.vz_uni = window_deltay * 0.0005;

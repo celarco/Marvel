@@ -1,0 +1,17 @@
+<package>
+  <description brief="Marvel">
+
+                              Marvel
+     This package is developed by Ali Jameei and Mohammad hossein kazemi
+                      All Rights Reserved 2015-2016
+           Amirkabir University of technology Aerospace department
+  </description>
+  <author>celarco-TIR4N4Z0R05</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+</package>
+
+
