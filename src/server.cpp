@@ -55,7 +55,7 @@ void msg_receive(uint8_t c) {
     {   
         // Handle message
         
-        // std::cout << int(msg.msgid) <<std::endl;
+        //std::cout << int(msg.msgid) <<std::endl;
 		switch(msg.msgid)
         {   case MAVLINK_MSG_ID_HEARTBEAT:
 				mavlink_heartbeat_t heartbeat;
@@ -405,9 +405,9 @@ int main(int argc, char **argv) {
 
     // Port configuration
     
-    port.open("/dev/ttySAC0");
-    port.set_option(asio::serial_port_base::baud_rate(115200));
-   
+    port.open("/dev/ttyTHS1");
+    port.set_option(asio::serial_port_base::baud_rate(57600));
+   	
     // Ros configuration
     
     ros::init(argc, argv, "server");
@@ -431,9 +431,8 @@ int main(int argc, char **argv) {
 	char r_byte;
     while(1) {
         asio::read(port, asio::buffer(&r_byte,1));
-        msg_receive(uint8_t(r_byte));
-		
-	 	if((current_arm_status == 1)&&(last_arm_status == 0)) {
+		msg_receive(uint8_t(r_byte));
+        if((current_arm_status == 1)&&(last_arm_status == 0)) {
 			last_arm_status = 1;
 			msg_send_arm();
 		}
