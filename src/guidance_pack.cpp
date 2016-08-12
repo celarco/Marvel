@@ -46,6 +46,7 @@ float move_oa_break_cond = 0;
 float window_deltax = 0, window_deltay = 0, window_pitch = 0;
 
 float obstacle_vx_setpoint = 0, obstacle_vy_setpoint = 0, obstacle_vz_setpoint = 0 ,obstacle_psi_setpoint = 0;
+
 bool armed = false;
 bool server_ready = false;
 
@@ -159,6 +160,8 @@ int main(int argc, char **argv) {
     
 	// wait for the server to be ready
 	
+	std::cout<<"Waiting for server to be ready...!"<<std::endl;
+
 	while(!server_ready) {
 		ros::spinOnce();
 	}

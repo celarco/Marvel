@@ -77,6 +77,8 @@ void msg_receive(uint8_t c) {
 			case MAVLINK_MSG_ID_PARAM_VALUE:
 				mavlink_param_value_t param_value_msg;
 				mavlink_msg_param_value_decode(&msg, &param_value_msg);
+				std::cout << int(param_value_msg.param_index) << std::endl;
+				std::cout << mavlink_msg_param_value_get_param_value(&msg) << std::endl;				
 				switch(int(param_value_msg.param_index)) {
 					
 					// Extracting radio roll parameters
