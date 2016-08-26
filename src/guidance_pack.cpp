@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
 	// wait for the server to be ready
 	
 	std::cout<<"Waiting for server to be ready...!"<<std::endl;
-
+    system("rosrun Marvel server &> /dev/null &");
 	while(!server_ready) {
 		ros::spinOnce();
 	}
@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
 	if(!(initialize_flight_plan())) {
 
         std::cout<<"Error: Flight plan couldn't be initialized"<<std::endl;
-        return 0;
+        //return 0;
     }
     else {
         std::cout<<"Flight plan successfully initialized...!"<<std::endl;
@@ -182,14 +182,17 @@ int main(int argc, char **argv) {
 	// Autopilot initialization
 	
 	guidance_msg.arm = 1;
-	guidance_msg.mode = 100;
+	guidance_msg.mode = 0;
 	pid_z.set_max_sum(3.0);
 	heading_setpoint = heading;
-	
+	guidance_msg.roll = 0;
+    guidance_msg.pitch = 0;
+	guidance_msg.yaw = 0;
+	guidance_msg.throttle = 50;
     // Guidance loop
-    
+    std::cout<<"running...!"<<std::endl;
     while(true) {
-        
+        /*
         // Handle function characteristics
         
         if(f[current_function_no].done == true){
@@ -376,11 +379,11 @@ int main(int argc, char **argv) {
 		
 		break;
 		}
-		
+		*/
         //std::cout << current_function_no << std::endl;
-        std::cout << guidance_msg.roll << " " << guidance_msg.pitch << " " << guidance_msg.throttle << " " << guidance_msg.yaw << " " << std::endl;
+        //std::cout << guidance_msg.roll << " " << guidance_msg.pitch << " " << guidance_msg.throttle << " " << guidance_msg.yaw << " " << std::endl;
         ros::spinOnce();
-        pub.publish(guidance_msg);
+        pub.publish(guidance_msg); 
     }
 
     return 0;

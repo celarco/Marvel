@@ -83,115 +83,115 @@ void msg_receive(uint8_t c) {
 					
 					// Extracting radio roll parameters
 					
-					case 70:
+					case 74:
 					rc.roll.min = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 71:
+					case 75:
 					rc.roll.trim = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 72:
+					case 76:
 					rc.roll.max = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 73:
+					case 77:
 					rc.roll.rev = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 74:
+					case 78:
 					rc.roll.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
 					// Extracting radio pitch parameters
 					
-					case 75:
+					case 79:
 					rc.pitch.min = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 76:
+					case 80:
 					rc.pitch.trim = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 77:
+					case 81:
 					rc.pitch.max = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 78:
+					case 82:
 					rc.pitch.rev = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 79:
+					case 83:
 					rc.pitch.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
 					// Extracting radio throttle parameters
 					
-					case 80:
+					case 84:
 					rc.throttle.min = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 81:
+					case 85:
 					rc.throttle.trim = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 82:
+					case 86:
 					rc.throttle.max = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 83:
+					case 87:
 					rc.throttle.rev = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 84:
+					case 88:
 					rc.throttle.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
 					// Extracting radio yaw parameters
 					
-					case 85:
+					case 89:
 					rc.yaw.min = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 86:
+					case 90:
 					rc.yaw.trim = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 87:
+					case 91:
 					rc.yaw.max = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 88:
+					case 92:
 					rc.yaw.rev = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 89:
+					case 93:
 					rc.yaw.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
 					// Extracting radio mode parameters
 					
-					case 90:
+					case 94:
 					rc.mode.min = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 91:
+					case 95:
 					rc.mode.trim = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 92:
+					case 96:
 					rc.mode.max = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 93:
+					case 97:
 					rc.mode.rev = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 94:
+					case 98:
 					rc.mode.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 500:
+					case 573:
 					std::cout << "Parameters received...!" << std::endl;
 					autopilot_msg.ready = true;
 					break;
