@@ -77,8 +77,8 @@ void msg_receive(uint8_t c) {
 			case MAVLINK_MSG_ID_PARAM_VALUE:
 				mavlink_param_value_t param_value_msg;
 				mavlink_msg_param_value_decode(&msg, &param_value_msg);
-				//std::cout << int(param_value_msg.param_index) << std::endl;
-				//std::cout << mavlink_msg_param_value_get_param_value(&msg) << std::endl;				
+				std::cout << int(param_value_msg.param_index) << std::endl;
+				std::cout << mavlink_msg_param_value_get_param_value(&msg) << std::endl;				
 				switch(int(param_value_msg.param_index)) {
 					
 					// Extracting radio roll parameters
@@ -191,7 +191,7 @@ void msg_receive(uint8_t c) {
 					rc.mode.dz = int(mavlink_msg_param_value_get_param_value(&msg));
 					break;
 					
-					case 573:
+					case 507:
 					std::cout << "Parameters received...!" << std::endl;
 					autopilot_msg.ready = true;
 					break;
@@ -402,8 +402,8 @@ void guidance_msg_Callback(const Marvel::Guidance_Command::ConstPtr& msg) {
 // Main program
 
 int main(int argc, char **argv) {
-
-    // Port configuration
+	
+	// Port configuration
     
     port.open("/dev/ttyTHS1");
     port.set_option(asio::serial_port_base::baud_rate(57600));
@@ -425,7 +425,7 @@ int main(int argc, char **argv) {
 	msg_send_request_stream();
 	msg_send_request_param();   
 	
-    // Main loop
+	// Main loop
     
 	char r_byte;
     while(1) {
@@ -437,7 +437,7 @@ int main(int argc, char **argv) {
 		}
 		if((desired_arm_status == 0)&&(last_arm_status == 1)) {
 			last_arm_status = 0;
-			//msg_send_disarm();
+			msg_send_disarm();
 		} 
 		ros::spinOnce();
         pub.publish(autopilot_msg);

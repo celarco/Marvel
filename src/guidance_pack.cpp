@@ -52,6 +52,8 @@ float nominal_hover_throttle = 50.0;
 
 // Flight plan variables
 
+//vector <block_struct> blocks;
+
 unsigned short int current_block_no = 0;
 
 // Server receive callback function
@@ -89,7 +91,6 @@ int main(int argc, char **argv) {
 	
 	guidance_command.arm = 1;
 	guidance_command.mode = 0;
-	pid_z.set_max_sum(3.0);
 	heading_setpoint = heading;
 	guidance_command.roll = 0;
     guidance_command.pitch = 0;

@@ -49,7 +49,7 @@ enum block_type {
 //	take_off_heading_mode take_off_hdg_mode;
 //	
 //}
-struct block {
+struct block_struct {
     block_type type;
     
     vertical_mode v_mode;
