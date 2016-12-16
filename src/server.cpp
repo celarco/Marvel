@@ -10,7 +10,7 @@ Technology.
 #include <iostream>
 #include <pixhawk/mavlink.h>
 #include "ros/ros.h"
-#include <Marvel/Autopilot.h>
+#include <Marvel/Server.h>
 #include <Marvel/Guidance_Command.h>
 #include <radio.h>
 
@@ -22,13 +22,13 @@ asio::serial_port port(ios);
 
 // Message initialization
 
-Marvel::Autopilot autopilot_msg;
+Marvel::Server autopilot_msg;
 Marvel::Guidance_Command guidance_msg;
 
 // Global variables
 
 bool last_arm_status = 0;
-bool current_arm_status = 0;
+bool desired_arm_status = 0;
 int roll = 0, pitch = 0, yaw = 0, throttle = 0;
 int mode = 0;
 radio rc;
@@ -66,19 +66,19 @@ void msg_receive(uint8_t c) {
             case MAVLINK_MSG_ID_ATTITUDE:
 				mavlink_attitude_t attitude_msg;
 				mavlink_msg_attitude_decode(&msg, &attitude_msg);
-				autopilot_msg.rate = attitude_msg.yawspeed * 180 / 3.1415;
-				autopilot_msg.heading = attitude_msg.yaw * 180 / 3.1415;
+				autopilot_msg.ap_rate = attitude_msg.yawspeed * 180 / 3.1415;
+				autopilot_msg.ap_heading = attitude_msg.yaw * 180 / 3.1415;
 			break;
 			case MAVLINK_MSG_ID_VFR_HUD:
 				mavlink_vfr_hud_t vfr_msg;
 				mavlink_msg_vfr_hud_decode(&msg, &vfr_msg);
-				autopilot_msg.climb = vfr_msg.climb;
+				autopilot_msg.ap_climb = vfr_msg.climb;
 			break;
 			case MAVLINK_MSG_ID_PARAM_VALUE:
 				mavlink_param_value_t param_value_msg;
 				mavlink_msg_param_value_decode(&msg, &param_value_msg);
-				std::cout << int(param_value_msg.param_index) << std::endl;
-				std::cout << mavlink_msg_param_value_get_param_value(&msg) << std::endl;				
+				//std::cout << int(param_value_msg.param_index) << std::endl;
+				//std::cout << mavlink_msg_param_value_get_param_value(&msg) << std::endl;				
 				switch(int(param_value_msg.param_index)) {
 					
 					// Extracting radio roll parameters
@@ -391,7 +391,7 @@ void msg_send_request_stream() {
 // Guidance message callback function
 
 void guidance_msg_Callback(const Marvel::Guidance_Command::ConstPtr& msg) {
-	current_arm_status = msg->arm;
+	desired_arm_status = msg->arm;
 	throttle = rc.calc_throttle(int(bound(msg->throttle)));
 	roll = rc.calc_roll(int(bound(msg->roll)));
 	pitch = rc.calc_pitch(int(bound(msg->pitch)));
@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
     
     ros::init(argc, argv, "server");
     ros::NodeHandle n;
-    ros::Publisher pub = n.advertise<Marvel::Autopilot>("server", 1000);
+    ros::Publisher pub = n.advertise<Marvel::Server>("server", 1000);
     ros::Subscriber sub = n.subscribe("guidance_pack", 1000, guidance_msg_Callback);
     ros::Timer rc_timer = n.createTimer(ros::Duration(0.05), msg_send_radio_callback);
 	ros::Timer heartbeat_timer = n.createTimer(ros::Duration(1.0), msg_send_heartbeat_callback);
@@ -422,9 +422,8 @@ int main(int argc, char **argv) {
 	autopilot_msg.ready = false;
 	
 	// Read autopilot parameters
-	
 	msg_send_request_stream();
-	msg_send_request_param();
+	msg_send_request_param();   
 	
     // Main loop
     
@@ -432,11 +431,11 @@ int main(int argc, char **argv) {
     while(1) {
         asio::read(port, asio::buffer(&r_byte,1));
 		msg_receive(uint8_t(r_byte));
-        if((current_arm_status == 1)&&(last_arm_status == 0)) {
+        if((desired_arm_status == 1)&&(last_arm_status == 0)) {
 			last_arm_status = 1;
 			msg_send_arm();
 		}
-		if((current_arm_status == 0)&&(last_arm_status == 1)) {
+		if((desired_arm_status == 0)&&(last_arm_status == 1)) {
 			last_arm_status = 0;
 			//msg_send_disarm();
 		} 

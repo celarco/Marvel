@@ -10,27 +10,61 @@ Technology.
 #define GUIDANCE_PACK_HEADER
 
 enum vertical_mode {
-    VERTICAL_HOLD,
-    VERTICAL_LOCK,
-    VERTICAL_CLIMB
+    VERTICAL_POS,
+    VERTICAL_VELOCITY
 };
 
 enum horizontal_mode {
-    HORIZONTAL_HOLD,
-    HORIZONTAL_LOCK,
-    HORIZONTAL_VELOCITY
+    HORIZONTAL_POS,
+    HORIZONTAL_VELOCITY,
+    HORIZONTAL_ATTITUDE,
+    HORIZONTAL_PRECISION
 };
 
 enum heading_mode {
-    HEADING_HOLD,
-    HEADING_LOCK,
-    HEADING_RATE
+    HEADING_RATE,
+    HEADING_ANGLE,
+    HEADING_FREE
 };
 
-enum lock_param {
-	WINDOW_DETECTOR = 1,
-	FLOWER,
-	MARKER,
-	ROPE
+enum block_type { 
+    BLOCK_TAKE_OFF = 1,
+    BLOCK_LAND,
+    BLOCK_POSITION_HOLD
 };
+//
+//enum take_off_horizontal_mode {
+//	HOLD_POS,
+//	HOLD_ATTITUDE
+//}
+//enum take_off_heading_mode {
+//	ZERO_RATE,
+//	HOLD_ANGLE,
+//	FREE
+//}
+//struct take_off_block{
+//	float height = 0.0;
+//	float climb_rate = 0.0;
+//	take_off_horizontal_mode take_off_h_mode;
+//	take_off_heading_mode take_off_hdg_mode;
+//	
+//}
+struct block {
+    block_type type;
+    
+    vertical_mode v_mode;
+    horizontal_mode h_mode;
+    heading_mode hdg_mode;
+
+	float v_x_setpoint = 0.0, v_y_setpoint = 0.0, v_z_setpoint = 0.0;
+	float x_setpoint = 0.0, y_setpoint = 0.0, z_setpoint = 0.0; 
+
+	float heading_setpoint = 0.0;
+	float roll_setpoint = 0.0;
+	float pitch_setpoint = 0.0;
+		
+	float yaw_rate_setpoint = 0.0;
+};
+
+
 #endif
