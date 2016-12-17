@@ -3,6 +3,7 @@ find_package( OpenCV REQUIRED )
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 project( Marvel )
 
+find_package( OpenCV 2 REQUIRED )
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -14,6 +15,7 @@ project( Marvel )
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/mavlink)
+include_directories(${OpenCV_INCLUDE_DIRS})
 rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
@@ -37,7 +39,7 @@ rosbuild_gensrv()
 rosbuild_add_executable(guidance_pack ${GUIDANCE_PACK_SRCS})
 rosbuild_add_executable(server src/server.cpp)
 rosbuild_add_executable(server src/server.cpp src/radio.cpp)
-
+target_link_libraries(guidance_pack ${OpenCV_LIBS})
 
 
 

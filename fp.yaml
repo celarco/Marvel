@@ -1,0 +1,21 @@
+%YAML:1.0
+
+#Flight plan blocks:
+
+take_off_1:
+   - { height:40, speed:2, horizontal_mode:Hold_Att, roll:4, pitch:0.5 }
+
+position_hold_2:
+   - { heading:Ang, stop_condition:Time, global_angle:0, rate:0, turns:0, time:2.3, angle:0 }
+
+landing_3:
+   - { speed:1, horizontal_mode:Prec, heading_mode:CurrAng, object_dir:-, method:-, h_min:0, h_max:255, s_min:0, s_max:255, v_min:0, v_max:255 }
+
+take_off_4:
+   - { height:40, speed:2, horizontal_mode:Hold_Att, roll:4, pitch:0.5 }
+
+position_hold_5:
+   - { heading:Ang, stop_condition:Time, global_angle:0, rate:0, turns:0, time:2.3, angle:0 }
+
+landing_6:
+   - { speed:1, horizontal_mode:Prec, heading_mode:CurrAng, object_dir:-, method:-, h_min:0, h_max:255, s_min:0, s_max:255, v_min:0, v_max:255 }

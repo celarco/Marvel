@@ -63,11 +63,105 @@ void server_receive_Callback(const Marvel::Server::ConstPtr& msg) {
 	server_ready = msg->ready;
 }
 
+//Reading all parameters from flight plan
+
+void Read_Flight_Plan(){
+
+	//while(fp_dir == ""){}
+
+	FileStorage fs("/home/hojat/WS/sandbox/Marvel/fp.yaml", FileStorage::READ);
+	
+	int c = 1;
+	bool blocks_finished = true;
+	stringstream convert;
+
+	//Extracting take off blocks
+	while(1){
+		blocks_finished = true;
+
+		convert.str("");
+		convert << c;
+		string block_name_to = "take_off_" + convert.str();
+		string block_name_l = "landing_" + convert.str();
+		string block_name_ph = "position_hold_" + convert.str(); 
+
+		FileNode take_off = fs[block_name_to];
+		FileNode landing = fs[block_name_l];
+		FileNode position_hold = fs[block_name_ph];
+
+		if(!take_off.empty()){
+			
+			cout << block_name_to << "\t";
+
+			FileNodeIterator it = take_off.begin() , it_end = take_off.end();
+
+			for( ; it != it_end; ++it){
+				cout << (float)(*it)["height"] << "\t";
+				cout << (float)(*it)["speed"] << "\t";
+				cout << (string)(*it)["horizontal_mode"] << "\t";
+				cout << (float)(*it)["roll"] << "\t";
+				cout << (float)(*it)["pitch"] << "\n";
+			}	
+
+			blocks_finished = false;
+		}
+
+		if(!landing.empty()){
+			
+			cout << block_name_l << "\t";
+
+			FileNodeIterator it = landing.begin() , it_end = landing.end();
+
+			for( ; it != it_end; ++it){
+				cout << (float)(*it)["speed"] << "\t";
+				cout << (string)(*it)["horizontal_mode"] << "\t";
+				cout << (string)(*it)["heading_mode"] << "\t";
+				cout << (string)(*it)["object_dir"] << "\t";
+				cout << (string)(*it)["method"] << "\t";
+				cout << (int)(*it)["h_min"] << "\t";
+				cout << (int)(*it)["h_max"] << "\t";
+				cout << (int)(*it)["s_min"] << "\t";
+				cout << (int)(*it)["s_max"] << "\t";
+				cout << (int)(*it)["v_min"] << "\t";
+				cout << (int)(*it)["v_max"] << "\n";
+			}	
+
+			blocks_finished = false;
+		}
+
+		if(!position_hold.empty()){
+			
+			cout << block_name_ph << "\t";
+
+			FileNodeIterator it = position_hold.begin() , it_end = position_hold.end();
+
+			for( ; it != it_end; ++it){
+				cout << (string)(*it)["heading"] << "\t";
+				cout << (string)(*it)["stop_condition"] << "\t";
+				cout << (float)(*it)["global_angle"] << "\t";
+				cout << (float)(*it)["rate"] << "\t";
+				cout << (float)(*it)["turns"] << "\t";
+				cout << (float)(*it)["time"] << "\t";
+				cout << (float)(*it)["angle"] << "\n";
+			}	
+
+			blocks_finished = false;
+		}
+
+		if(blocks_finished)
+			break;
+
+		c++;
+
+	}
+
+}
+
 // Main program start
 
 int main(int argc, char **argv) {
 
-    
+    Read_Flight_Plan();
     // Ros initialization
    
     ros::init(argc, argv, "guidance_pack");
