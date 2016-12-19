@@ -9,6 +9,16 @@ Technology.
 #ifndef GUIDANCE_PACK_HEADER
 #define GUIDANCE_PACK_HEADER
 
+#include <string>
+#include <sstream>
+#include "opencv2/opencv.hpp"
+
+using namespace cv;
+using namespace std;
+
+void Read_Flight_Plan();
+string fp_dir;
+
 enum vertical_mode {
     VERTICAL_POS,
     VERTICAL_VELOCITY
