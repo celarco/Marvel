@@ -42,38 +42,55 @@ enum block_type {
     BLOCK_LAND,
     BLOCK_POSITION_HOLD
 };
-//
-//enum take_off_horizontal_mode {
-//	HOLD_POS,
-//	HOLD_ATTITUDE
-//}
-//enum take_off_heading_mode {
-//	ZERO_RATE,
-//	HOLD_ANGLE,
-//	FREE
-//}
-//struct take_off_block{
-//	float height = 0.0;
-//	float climb_rate = 0.0;
-//	take_off_horizontal_mode take_off_h_mode;
-//	take_off_heading_mode take_off_hdg_mode;
-//	
-//}
+
+struct h_detection {
+	string obj_dir;
+	string method;
+}
+
+struct color_tracking{
+	int h_min;
+	int h_max;
+	int s_min;
+	int s_max;
+	int v_min;
+	int v_max;
+}
+
+struct object_tracking {
+	string obj_dir;
+	string method;
+	int angle;
+}
+
 struct block_struct {
     block_type type;
     
     vertical_mode v_mode;
     horizontal_mode h_mode;
     heading_mode hdg_mode;
+	
+	h_detection h_detect;
+	color_tracking color_track;
+	object_tracking obj_track;
 
 	float v_x_setpoint = 0.0, v_y_setpoint = 0.0, v_z_setpoint = 0.0;
 	float x_setpoint = 0.0, y_setpoint = 0.0, z_setpoint = 0.0; 
+	float delta_x_setpoint = 0.0, delta_y_setpoint = 0.0, delta_z_setpoint = 0.0; 
 
 	float heading_setpoint = 0.0;
+	float delta_heading_setpoint = 0.0;
+	
 	float roll_setpoint = 0.0;
 	float pitch_setpoint = 0.0;
+	float delta_roll_setpoint = 0.0;
+	float delta_pitch_setpoint = 0.0;
+	
+	float psi_setpoint = 0.0;
+	float delta_psi_setpoint = 0.0;
 		
 	float yaw_rate_setpoint = 0.0;
+	float delta_yaw_rate_setpoint = 0.0;
 };
 
 

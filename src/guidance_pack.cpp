@@ -16,6 +16,7 @@ Technology.
 #include <ros/ros.h>
 #include <Marvel/Server.h>
 #include <Marvel/Guidance_Command.h>
+#include <vector>
 
 
 // Guidance variables
@@ -52,7 +53,7 @@ float nominal_hover_throttle = 50.0;
 
 // Flight plan variables
 
-//vector <block_struct> blocks;
+vector <block_struct> blocks;
 
 unsigned short int current_block_no = 0;
 
@@ -68,6 +69,8 @@ void server_receive_Callback(const Marvel::Server::ConstPtr& msg) {
 void Read_Flight_Plan(){
 
 	//while(fp_dir == ""){}
+	
+	blocks.resize(0);
 
 	FileStorage fs("/home/hojat/WS/sandbox/Marvel/fp.yaml", FileStorage::READ);
 	
@@ -77,6 +80,9 @@ void Read_Flight_Plan(){
 
 	//Extracting take off blocks
 	while(1){
+		
+		block_struct temp_block;
+		
 		blocks_finished = true;
 
 		convert.str("");
@@ -91,16 +97,32 @@ void Read_Flight_Plan(){
 
 		if(!take_off.empty()){
 			
-			cout << block_name_to << "\t";
+			//cout << block_name_to << "\t";
+			temp_block.type = BLOCK_TAKE_OFF;
 
 			FileNodeIterator it = take_off.begin() , it_end = take_off.end();
 
 			for( ; it != it_end; ++it){
-				cout << (float)(*it)["height"] << "\t";
+				/*cout << (float)(*it)["height"] << "\t";
 				cout << (float)(*it)["speed"] << "\t";
 				cout << (string)(*it)["horizontal_mode"] << "\t";
 				cout << (float)(*it)["roll"] << "\t";
 				cout << (float)(*it)["pitch"] << "\n";
+				 out << (float)(*it)["heading_mode"] << "\t"; */
+				temp_block.v_mode = VERTICAL_VELOCITY;
+				temp_block.v_z_setpoint = (float)(*it)["speed"] ;
+				if ((string)(*it)["horizontal_mode"] == "Hold_Pos"){
+					temp_block.h_mode = HORIZONTAL_POS ;
+					/*temp_block.x_setpoint =
+					 temp_block.y_setpoint = */
+					
+				}
+				else if ((string)(*it)["horizontal_mode"] == "Hold_Att"){
+					temp_block.h_mode = HORIZONTAL_ATTITUDE;
+					temp_block.roll_setpoint = (float)(*it)["roll"] 
+					temp_block.pitch_setpoint = (float)(*it)["pitch"];
+				} 
+				
 			}	
 
 			blocks_finished = false;
@@ -113,7 +135,7 @@ void Read_Flight_Plan(){
 			FileNodeIterator it = landing.begin() , it_end = landing.end();
 
 			for( ; it != it_end; ++it){
-				cout << (float)(*it)["speed"] << "\t";
+				/*cout << (float)(*it)["speed"] << "\t";
 				cout << (string)(*it)["horizontal_mode"] << "\t";
 				cout << (string)(*it)["heading_mode"] << "\t";
 				cout << (string)(*it)["object_dir"] << "\t";
@@ -123,7 +145,7 @@ void Read_Flight_Plan(){
 				cout << (int)(*it)["s_min"] << "\t";
 				cout << (int)(*it)["s_max"] << "\t";
 				cout << (int)(*it)["v_min"] << "\t";
-				cout << (int)(*it)["v_max"] << "\n";
+				cout << (int)(*it)["v_max"] << "\n";*/
 			}	
 
 			blocks_finished = false;
